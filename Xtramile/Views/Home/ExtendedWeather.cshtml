@@ -1,0 +1,46 @@
+﻿@model Xtramile.Models.WeatherViewModel
+
+@{
+    ViewBag.Title = "Forecast";
+    var num = 2;
+}
+
+<title>Weather</title>
+
+<div>
+    @if (Model.Weathers.Count() > 0) {
+    <table class="table mb-0 text-light" style="background-color: #090a0f">
+        <tr>
+                <th>Location</th>
+                <th>Time</th>
+                <th>Wind Speed</th>
+                <th>Wind Degree</th>
+                <th>Visibility</th>
+                <th>Sky Description</th>
+                <th>Temp In C<i class="fas fa-temperature" style="font-size: 1.5em; color: blue;" /></th>
+                <th>Temp In F<i class="fas fa-temperature" style="font-size: 1.5em; color: blue;" /></th>
+                <th>DewPoint</th>
+                <th>Humidity</th>
+                <th>Pressure</th>
+        </tr>
+        @foreach (var item in Model.Weathers)
+        {
+                string colour = num % 2 == 0 ? "#0c121a" : "#090a0f";
+                <tr style="background-color: @colour">
+                <td>@item.CityName , @item.Country</td>
+                <td>@item.TimeStamp</td>
+                <td>@item.WindSpeed</td>
+                <td>@item.WindDegree</td>
+                <td>@item.Visibility</td>
+                <td>@item.SkyDescription</td>
+                <td>@item.TemperatureInC<span>&deg;</span>C</td>
+                <td>@item.TemperatureInF<span>&deg;</span>F</td>
+                <td>@item.DewPoint</td>
+                <td>@item.Humidity</td>
+                <td>@item.Pressure</td>
+            </tr>
+            num++;
+        }
+    </table>
+    }
+</div>

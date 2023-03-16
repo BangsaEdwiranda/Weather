@@ -1,0 +1,86 @@
+﻿@model Xtramile.Models.WeatherViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WEATHER</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+<body>
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+    {
+        @Html.DropDownListFor(m => m.CountryId, new List<SelectListItem>(), "Please select country", new { onchange = "getCities()", @id = "DropDownListCountries" })
+        <br />
+        <br />
+
+        @Html.DropDownListFor(m => m.CityId, new List<SelectListItem>(), "Please select city", new { disabled = "disabled", @id = "DropDownListCities"})
+        <br />
+        <br />
+        <input type="submit" value="Submit" />
+    }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "/api/tool/country",
+                data: "",
+                success: function (data) {
+                    console.log(data);
+                    var items = "";
+                    items = "<option value=''>--Choose Country--</option>";
+                    $.each(data, function (i, item) {
+                        items += "<option value=\"" + item.id + "\">" + item.name + "</option>";
+                    });
+                    $('#DropDownListCountries').html(items);
+                }
+            });
+        });
+
+        function getCities() {
+            $("#DropDownListCities").removeAttr("disabled");
+            var countryId = $('#DropDownListCountries').val();
+            if (countryId > 0) {
+                $.ajax({
+                    url: "/api/tool/city/" + countryId,
+                    data: "",
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        var items = "";
+                        items = "<option value=''>--Choose City--</option>";
+                        $.each(data, function (i, item) {
+                            items += "<option value=\"" + item.id + "\">" + item.name + "</option>";
+                        });
+                        $('#DropDownListCities').html(items);
+                    }
+                });
+            }
+        }
+    </script>
+    <div class="text-light bodyBox rounded">
+        <div class="navBox rounded-top d-flex p-2 align-items-center justify-content-between">
+        </div>
+        <div class="rounded">
+            <main role="main" class="text-light">
+                @RenderBody()
+            </main>
+        </div>
+        <div class="position-relative">
+
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Added FontAwesome for fun icons -->
+    <script src="https://kit.fontawesome.com/5f597d47dc.js" crossorigin="anonymous"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
